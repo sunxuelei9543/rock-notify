@@ -1,18 +1,13 @@
-name: Keep Alive
-
+name: Github Action with a cronjob trigger
 on:
   schedule:
-    - cron: '0 2 1 * *'
-  workflow_dispatch:
-
-permissions:
-  actions: write
+    - cron: "0 0 * * *"
 jobs:
-  keep-alive:
+  keepalive-job:
+    name: Keepalive Workflow
     runs-on: ubuntu-latest
+    permissions:
+      actions: write
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Keepalive Workflow
-        uses: gautamkrishnar/keepalive-workflow@v2
+      - uses: actions/checkout@v4
+      - uses: gautamkrishnar/keepalive-workflow@v2
