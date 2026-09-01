@@ -1,15 +1,20 @@
-name: Github Action with a cronjob trigger
+name: Keep Alive
+
 on:
   schedule:
-    - cron: "0 0 * * *"
+    - cron: '0 2 1 * *'
   workflow_dispatch:
+
+permissions:
+  actions: write
+
 jobs:
-  keepalive-job:
-    name: Keepalive Workflow
+  keep-alive:
     runs-on: ubuntu-latest
-    permissions:
-      actions: write
-      contents: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: gautamkrishnar/keepalive-workflow@v2
+      - name: Keepalive via API
+        run: |
+          curl -s -X PUT \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows"
