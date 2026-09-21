@@ -14,6 +14,16 @@ URL = "https://www.onebiji.com/hykb_tools/comm/lkwgmerchant/preview.php?id=1&imm
 WEBHOOK_URL = os.environ.get("WECOM_WEBHOOK_URL", "")
 FEISHU_WEBHOOK_URL = os.environ.get("FEISHU_WEBHOOK_URL", "")
 
+# 命中任一关键词时，飞书卡片会 @所有人。
+FEISHU_MENTION_ALL_KEYWORDS = (
+    "国王球",
+    "黑晶琉璃",
+    "祝福项坠",
+    "棱镜球",
+    "炫彩蛋",
+    "首领血脉秘药",
+)
+
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                   "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -179,9 +189,21 @@ def build_no_merchant_message():
     )
 
 
+def should_feishu_mention_all(products):
+    """商品名称命中关键词时，飞书通知 @所有人。"""
+    return any(
+        keyword in product.get("name", "")
+        for product in products
+        for keyword in FEISHU_MENTION_ALL_KEYWORDS
+    )
+
+
 def build_feishu_card(products, time_period):
     """从商品数据直接构建飞书卡片 payload"""
     md_parts = [f"**⏰ 当前时间段**: {time_period}\n"]
+
+    if should_feishu_mention_all(products):
+        md_parts.append("<at id=all></at>\n")
 
     for i, p in enumerate(products, 1):
         tags = []
