@@ -17,7 +17,6 @@ FEISHU_WEBHOOK_URL = os.environ.get("FEISHU_WEBHOOK_URL", "")
 # 命中任一关键词时，飞书卡片会 @所有人。
 FEISHU_MENTION_ALL_KEYWORDS = (
     "国王球",
-    "黑晶琉璃",
     "祝福项坠",
     "棱镜球",
     "炫彩蛋",
